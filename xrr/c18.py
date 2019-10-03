@@ -1,0 +1,1 @@
+print(sum([int(j) for i in range(200+1) for j in str(i)]))
