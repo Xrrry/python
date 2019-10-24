@@ -15,7 +15,7 @@ Syns = {
     ';': 41, '(': 42, ')': 43, '#': 0,
     '%': 44, ',': 45, '.': 46, '?': 47,
     '==': 48, '++':49,'--':50,'+=':51,'-=':52,'!=':53,
-    '[':54, ']':55
+    '[':54, ']':55,'\\?':56,'{':57,'}':58
 }
 
 Iden = {
@@ -27,7 +27,7 @@ Iden = {
 }
 
 Oper = {
-    '+', '-', '*', '/', ':', ':=', '<', '<>', '<=', '>', '>=', '=', ';', '(', ')', '#', '%', ',', '.', '?', '==','++','--','+=','-=','!=','[',']'
+    '+', '-', '*', '/', ':', ':=', '<', '<>', '<=', '>', '>=', '=', ';', '(', ')', '#', '%', ',', '.', '?', '==','++','--','+=','-=','!=','[',']','{','}'
 }
 
 token = ''
@@ -36,6 +36,8 @@ oper = ''
 syn = -1
 inspe = False
 waitfor = False
+inmuti = False
+hasone = False
 
 
 def error(message):
@@ -90,6 +92,7 @@ def other(letter):
     global oper
     global inspe
     global waitfor
+    global inmuti
 
     if letter in Oper:
         if token:
@@ -106,6 +109,8 @@ def other(letter):
             oper += letter
         elif oper + letter == '//':
             inspe = True
+        elif oper + letter == '/*':
+            inmuti = True
         else:
             print('<'+str(Syns[oper])+'>    '+'---    运算符或界符   ' + oper)
             oper = ''+letter
@@ -135,21 +140,31 @@ if __name__ == '__main__':
     fo = open("code.cpp")
     s = fo.read()
     for letter in s:
-        if inspe==False:
-            if waitfor==False:
-                if letter.isalpha():
-                    identifier(letter)
-                elif letter.isdigit():
-                    number(letter)
-                elif letter.isspace():
-                    toprint()
+        if inmuti == False:
+            if inspe==False:
+                if waitfor==False:
+                    if letter.isalpha():
+                        identifier(letter)
+                    elif letter.isdigit():
+                        number(letter)
+                    elif letter.isspace():
+                        toprint()
+                    else:
+                        other(letter)
                 else:
-                    other(letter)
+                    print('<56>    ---    其他标记-ID    \\' + letter)
+                    waitfor = False
             else:
-                print('<  >    ---    其他标记-ID    \\' + letter)
-                waitfor = False
+                if letter == '\n':
+                    oper = ''
+                    inspe = False
         else:
-            if letter == '\n':
+            if hasone and letter=='/':
+                hasone = False
+                inmuti = False
+            elif letter == '*':
                 oper = ''
-                inspe = False
+                hasone = True
     print('分析完毕')
+    fo.close()
+

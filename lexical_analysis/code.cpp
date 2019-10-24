@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<string.h>
+a:=;
 int main()
 {
 	char a[100],b[20],c[20];
@@ -17,6 +18,7 @@ int main()
 		if(strcmp(b,c)==0)
 		{
 			count++;
+		
 		}	
 	}
 	printf("the times your string appears are %d\n",count);
