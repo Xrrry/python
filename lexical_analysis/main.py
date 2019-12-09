@@ -14,9 +14,9 @@ Syns = {
     '=': 38, 'default': 39, 'do': 40,
     ';': 41, '(': 42, ')': 43, '#': 0,
     '%': 44, ',': 45, '.': 46, '?': 47,
-    '==': 48, '++':49,'--':50,'+=':51,'-=':52,'!=':53,
-    '[':54, ']':55,'\\?':56,'{':57,'}':58
-}
+    '==': 48, '++': 49, '--': 50, '+=': 51, '-=': 52, '!=': 53,
+    '[': 54, ']': 55, '\\?': 56, '{': 57, '}': 58
+}  # 种别码
 
 Iden = {
     'main', 'if', 'then', 'while', 'do', 'static',
@@ -24,14 +24,15 @@ Iden = {
     'switch', 'case', 'typedef', 'char', 'return', 'const',
     'float', 'short', 'continue', 'for', 'void', 'default',
     'sizeof', 'do'
-}
+}  # 关键字
 
 Oper = {
-    '+', '-', '*', '/', ':', ':=', '<', '<>', '<=', '>', '>=', '=', ';', '(', ')', '#', '%', ',', '.', '?', '==','++','--','+=','-=','!=','[',']','{','}'
-}
+    '+', '-', '*', '/', ':', ':=', '<', '<>', '<=', '>', '>=', '=', ';', '(', ')', '#', '%', ',', '.', '?', '==', '++',
+    '--', '+=', '-=', '!=', '[', ']', '{', '}'
+}  # 运算符或界符
 
-token = ''
-summ = ''
+token = ''  # 已识别的单词符号字符串
+summ = ''  # 整型单词
 oper = ''
 syn = -1
 inspe = False
@@ -52,7 +53,7 @@ def identifier(letter):
 
     if oper:
         if oper in Oper:
-            print('<'+str(Syns[oper])+'>    '+'---    运算符或界符   ' + oper)
+            print('<' + str(Syns[oper]) + '>    ' + '---    运算符或界符   ' + oper)
             oper = ''
         else:
             error('无效的操作符')
@@ -73,7 +74,7 @@ def number(letter):
 
     if oper:
         if oper in Oper:
-            print('<'+str(Syns[oper])+'>    '+'---    运算符或界符   ' + oper)
+            print('<' + str(Syns[oper]) + '>    ' + '---    运算符或界符   ' + oper)
             oper = ''
         else:
             error('无效的操作符')
@@ -97,23 +98,23 @@ def other(letter):
     if letter in Oper:
         if token:
             if token in Iden:
-                print('<'+str(Syns[token])+'>    '+'---    关键字         ' + token)
+                print('<' + str(Syns[token]) + '>    ' + '---    关键字         ' + token)
                 token = ''
             else:
-                print('<'+str(Syns['ID'])+'>    '+'---    其他标记-ID    ' + token)
+                print('<' + str(Syns['ID']) + '>    ' + '---    其他标记-ID    ' + token)
                 token = ''
         elif summ:
-            print('<'+str(Syns['NUM'])+'>    '+'---    其他标记-NUM   ' + bin(int(summ)).replace('0b',''))
+            print('<' + str(Syns['NUM']) + '>    ' + '---    其他标记-NUM   ' + bin(int(summ)).replace('0b', ''))
             summ = ''
         if oper + letter in Oper:
             oper += letter
-        elif oper + letter == '//':
+        elif oper + letter == '//':  # 单行注释
             inspe = True
-        elif oper + letter == '/*':
+        elif oper + letter == '/*':  # 多行注释
             inmuti = True
         else:
-            print('<'+str(Syns[oper])+'>    '+'---    运算符或界符   ' + oper)
-            oper = ''+letter
+            print('<' + str(Syns[oper]) + '>    ' + '---    运算符或界符   ' + oper)
+            oper = '' + letter
     elif letter == '\\':
         toprint()
         waitfor = True
@@ -126,13 +127,13 @@ def toprint():
 
     if token:
         if token in Iden:
-            print('<'+str(Syns[token])+'>    '+'---    关键字         ' + token)
+            print('<' + str(Syns[token]) + '>    ' + '---    关键字         ' + token)
             token = ''
         else:
-            print('<'+str(Syns['ID'])+'>    '+'---    其他标记-ID    ' + token)
+            print('<' + str(Syns['ID']) + '>    ' + '---    其他标记-ID    ' + token)
             token = ''
     elif summ:
-        print('<'+str(Syns['NUM'])+'>    '+'---    其他标记-NUM   ' + bin(int(summ)).replace('0b',''))
+        print('<' + str(Syns['NUM']) + '>    ' + '---    其他标记-NUM   ' + bin(int(summ)).replace('0b', ''))
         summ = ''
 
 
@@ -140,9 +141,9 @@ if __name__ == '__main__':
     fo = open("code.cpp")
     s = fo.read()
     for letter in s:
-        if inmuti == False:
-            if inspe==False:
-                if waitfor==False:
+        if inmuti == False:  # 注释
+            if inspe == False:
+                if waitfor == False:
                     if letter.isalpha():
                         identifier(letter)
                     elif letter.isdigit():
@@ -151,20 +152,19 @@ if __name__ == '__main__':
                         toprint()
                     else:
                         other(letter)
-                else:
+                else:  # 反斜杠等待
                     print('<56>    ---    其他标记-ID    \\' + letter)
                     waitfor = False
             else:
-                if letter == '\n':
+                if letter == '\n':  # 换行后解除单行注释
                     oper = ''
                     inspe = False
         else:
-            if hasone and letter=='/':
+            if hasone and letter == '/':  # 出现*/
                 hasone = False
                 inmuti = False
-            elif letter == '*':
+            elif letter == '*':  # 出现*
                 oper = ''
                 hasone = True
     print('分析完毕')
     fo.close()
-
