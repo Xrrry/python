@@ -3,7 +3,6 @@ from urllib import request
 
 class Spider():
     url = 'https://www.blockchain.com/btc/block/000000000000000000173f2753b0c48eaa7d588a19a48dcfb4373de031b590b5'
-
     root_pattern = '<div id="tx-([\s\S]*?)</div></div>'
     button_pattern = 'btn btn-success cb">([\s\S]*?)</button>'
     number_pattern = '">([\s\S]*?) BTC</span>'
