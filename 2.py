@@ -29,7 +29,7 @@ try:
     wait2.until(EC.presence_of_element_located((By.XPATH, '//*[@id="bak_0"]')))
     select = Select(driver.find_element_by_xpath('//*[@id="bak_0"]/div[8]/select'))
     submit = driver.find_element_by_xpath('//*[@id="bak_0"]/div[13]/div[4]')
-    select.select_by_index(0)
+    select.select_by_value('正常')
     submit.click()
     wait3 = WebDriverWait(driver, 5)
     wait3.until(EC.presence_of_element_located((By.XPATH, '//*[@id="bak_0"]/div[2]/div[2]/div[2]/div[2]')))
